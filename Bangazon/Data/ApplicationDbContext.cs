@@ -58,7 +58,7 @@ namespace Bangazon.Data {
                 SecurityStamp = Guid.NewGuid ().ToString ("D")
             };
             var passwordHash = new PasswordHasher<ApplicationUser> ();
-            user.PasswordHash = passwordHash.HashPassword (user, "Admin8*");
+            user.PasswordHash = passwordHash.HashPassword (user, "P8ssword!");
             modelBuilder.Entity<ApplicationUser> ().HasData (user);
 
             modelBuilder.Entity<PaymentType> ().HasData (
