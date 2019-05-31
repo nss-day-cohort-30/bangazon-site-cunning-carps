@@ -67,7 +67,7 @@ namespace Bangazon
             app.UseCookiePolicy();
 
             app.UseAuthentication();
-
+            // Rerouted "load" to Products
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
