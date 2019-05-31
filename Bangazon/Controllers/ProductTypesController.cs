@@ -21,10 +21,37 @@ namespace Bangazon.Controllers
 
         // GET: ProductTypes
         public async Task<IActionResult> Index()
+
         {
-            return View(await _context.ProductType.ToListAsync());
+            var listOfProducts =  _context.Product;
+            
+            var productCount = (from product in _context.Product
+                                 group product by new
+                                 {
+                                     product.ProductTypeId,
+                                     product.ProductType.Label,
+                                     product.ProductType.Quantity,
+                                 }
+
+                   into productTypeGroup
+                                 
+                                 select new GroupedProductType
+                                 {
+                                     ProductTypeId = productTypeGroup.Key.ProductTypeId,
+                                     Label = productTypeGroup.Key.Label,
+                                     Quantity = productTypeGroup.Key.Quantity,
+                                     Products = listOfProducts.Where(p => p.ProductTypeId == productTypeGroup.Key.ProductTypeId).ToList(),
+                                     Count = productTypeGroup.Count()
+                                 }).ToList();
+
+            return View(productCount.Take(3));
+
         }
 
+    
+
+
+       
         // GET: ProductTypes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -33,15 +60,21 @@ namespace Bangazon.Controllers
                 return NotFound();
             }
 
+            GroupedProductType GroupedProductType = new GroupedProductType();
+
             var productType = await _context.ProductType
+                .Include(p => p.Products)
                 .FirstOrDefaultAsync(m => m.ProductTypeId == id);
             if (productType == null)
             {
                 return NotFound();
             }
 
-            return View(productType);
+            GroupedProductType.ProductType = productType;
+
+            return View(GroupedProductType);
         }
+    
 
         // GET: ProductTypes/Create
         public IActionResult Create()

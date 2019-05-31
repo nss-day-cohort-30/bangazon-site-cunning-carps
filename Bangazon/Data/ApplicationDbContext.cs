@@ -13,6 +13,8 @@ namespace Bangazon.Data {
         public DbSet<Product> Product { get; set; }
         public DbSet<ProductType> ProductType { get; set; }
         public DbSet<PaymentType> PaymentType { get; set; }
+        
+        public DbSet<ProductType> Products { get; set; }
         public DbSet<Order> Order { get; set; }
         public DbSet<OrderProduct> OrderProduct { get; set; }
 
@@ -36,10 +38,10 @@ namespace Bangazon.Data {
                 .HasDefaultValueSql ("GETDATE()");
 
             // Restrict deletion of related product when OrderProducts entry is removed
-            modelBuilder.Entity<Product> ()
-                .HasMany (o => o.OrderProducts)
-                .WithOne (l => l.Product)
-                .OnDelete (DeleteBehavior.Restrict);
+            modelBuilder.Entity<Product>()
+                .HasMany(o => o.OrderProducts)
+                .WithOne(l => l.Product)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<PaymentType> ()
                 .Property (b => b.DateCreated)
@@ -99,12 +101,42 @@ namespace Bangazon.Data {
                 },
                 new Product () {
                     ProductId = 2,
-                        ProductTypeId = 2,
-                        UserId = user.Id,
-                        Description = "It rolls fast",
-                        Title = "Wheelbarrow",
-                        Quantity = 5,
-                        Price = 29.99
+                    ProductTypeId = 2,
+                    UserId = user.Id,
+                    Description = "It rolls fast",
+                    Title = "Wheelbarrow",
+                    Quantity = 5,
+                    Price = 29.99
+                },
+                new Product()
+                {
+                    ProductId = 3,
+                    ProductTypeId = 2,
+                    UserId = user.Id,
+                    Description = "Really blends it well",
+                    Title = "Blender",
+                    Quantity = 2,
+                    Price = 19.99
+                },
+                new Product()
+                {
+                    ProductId = 4,
+                    ProductTypeId = 2,
+                    UserId = user.Id,
+                    Description = "Sharp",
+                    Title = "Knife Set",
+                    Quantity = 1,
+                    Price = 59.99
+                },
+                new Product()
+                {
+                    ProductId = 5,
+                    ProductTypeId = 2,
+                    UserId = user.Id,
+                    Description = "Black and Sleek",
+                    Title = "Microwave",
+                    Quantity = 2,
+                    Price = 100.00
                 }
             );
 
