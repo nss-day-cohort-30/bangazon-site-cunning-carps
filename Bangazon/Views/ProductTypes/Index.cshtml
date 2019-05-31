@@ -1,35 +1,36 @@
-﻿@model IEnumerable<Bangazon.Models.ProductType>
+﻿@model IEnumerable<Bangazon.Models.ProductTypeViewModels.GroupedProductType>
 
 @{
     ViewData["Title"] = "Index";
+  
 }
 
-<h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Label)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Label)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ProductTypeId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ProductTypeId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ProductTypeId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+
+    <table class="table">
+        <thead>
+            
+        </thead>
+        <tbody>
+           
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <br />
+                        <a asp-controller="ProductTypes" asp-action="Details" asp-route-id="@item.ProductTypeId"> @Html.DisplayFor(modelItem => item.Label)  (@Html.DisplayFor(modelItem => item.Count))</a>      
+                    </td>
+
+                </tr>
+        <td>
+                @foreach (Product item2 in item.Products.Take(3))
+                {
+            <dd>
+               
+                @Html.DisplayFor(modelItem => item2.Title)</dd>
+  
+            }
+        </td>
+            }
+            </tbody>
+        </table>
