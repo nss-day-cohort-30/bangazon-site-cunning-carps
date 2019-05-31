@@ -7,17 +7,24 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Bangazon.Data;
 using Bangazon.Models;
+using Microsoft.AspNetCore.Identity;
+using System.Data;
+using static Microsoft.AspNetCore.Hosting.Internal.HostingApplication;
 
 namespace Bangazon.Controllers
 {
     public class OrdersController : Controller
     {
+        private readonly UserManager<ApplicationUser> _userManager;
+
         private readonly ApplicationDbContext _context;
 
-        public OrdersController(ApplicationDbContext context)
+        public OrdersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
+            _userManager = userManager;
             _context = context;
         }
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
         // GET: Orders
         public async Task<IActionResult> Index()
@@ -71,6 +78,56 @@ namespace Bangazon.Controllers
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", order.UserId);
             return View(order);
         }
+
+
+
+
+           public async Task<IActionResult> Purchase([FromRoute] int id)
+            {
+
+            Product productToAdd = await _context.Product.SingleOrDefaultAsync(p => p.ProductId == id);
+
+            // Get the current user
+            var user = await GetCurrentUserAsync();
+
+            // See if the user has an open order
+            var openOrder = await _context.Order.SingleOrDefaultAsync(o => o.User == user && o.DateCompleted == null);
+
+            // If no order, create one, else add to existing order
+            Order returnedOrder = null;
+            if (openOrder == null)
+            {
+                var newOrder = new Order
+                {
+                    DateCreated = DateTime.Now,
+                    DateCompleted = null,
+                    UserId = user.Id,
+                    PaymentTypeId = null,
+                };
+
+                _context.Add(newOrder);
+                _context.SaveChanges();
+                returnedOrder = newOrder;
+                
+            } else
+
+            {
+            var order = await _context.Order.SingleOrDefaultAsync(o => o.UserId == user.Id);
+                var newOrderProduct = new OrderProduct
+                {
+                    OrderId = order.OrderId,
+                    ProductId = id
+                };
+                _context.Add(newOrderProduct);
+                _context.SaveChanges();
+                returnedOrder = order;                
+            }
+
+            var ad = new OrderDetailViewModel
+
+            return View("OrderDetails", returnedOrder); 
+        }      
+
 
         // GET: Orders/Edit/5
         public async Task<IActionResult> Edit(int? id)
