@@ -18,18 +18,19 @@ namespace Bangazon.Models
 
     [Required]
     [StringLength(55)]
+    [Display(Name = "Card Type")]
     public string Description { get; set; }
 
     [Required]
     [StringLength(20)]
     public string AccountNumber { get; set; }
 
-    [Required]
-    public string UserId {get; set;}
+        //[Required]
+        public string UserId { get; set; }
 
-    [Required]
-    public ApplicationUser User { get; set; }
+        //[Required]
+        public ApplicationUser User { get; set; }
 
-    public ICollection<Order> Orders { get; set; }
+        public ICollection<Order> Orders { get; set; }
   }
 }

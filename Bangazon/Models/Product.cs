@@ -37,7 +37,7 @@ namespace Bangazon.Models
 
     public string ImagePath {get; set;}
 
-    [Required]
+    //[Required]
     public ApplicationUser User { get; set; }
 
     [Required]

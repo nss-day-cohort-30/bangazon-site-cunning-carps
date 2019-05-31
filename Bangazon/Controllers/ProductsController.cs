@@ -14,16 +14,15 @@ namespace Bangazon.Controllers
     public class ProductsController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
-
         private readonly ApplicationDbContext _context;
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
         public ProductsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
             _context = context;
+            _userManager = userManager;
         }
-        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
-           
         // GET: Products
         public async Task<IActionResult> Index()
         {
@@ -66,8 +65,13 @@ namespace Bangazon.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ProductId,DateCreated,Description,Title,Price,Quantity,UserId,City,ImagePath,ProductTypeId")] Product product)
         {
+            ModelState.Remove("UserId");
+            var user = await GetCurrentUserAsync();
+
             if (ModelState.IsValid)
             {
+                product.User = user;
+                product.UserId = user.Id;
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

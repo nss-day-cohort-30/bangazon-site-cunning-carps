@@ -8,8 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using Bangazon.Data;
 using Bangazon.Models;
 using Microsoft.AspNetCore.Identity;
-using System.Data;
-using static Microsoft.AspNetCore.Hosting.Internal.HostingApplication;
 
 namespace Bangazon.Controllers
 {
@@ -23,13 +21,16 @@ namespace Bangazon.Controllers
         {
             _userManager = userManager;
             _context = context;
+            _userManager = userManager;
         }
+
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
         // GET: Orders
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Order.Include(o => o.PaymentType).Include(o => o.User);
+            var user = await GetCurrentUserAsync();
+            var applicationDbContext = _context.Order.Include(o => o.PaymentType).Include(o => o.User).Where(o => o.User.Id == user.Id);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -41,9 +42,11 @@ namespace Bangazon.Controllers
                 return NotFound();
             }
 
+            var user = await GetCurrentUserAsync();
+
             var order = await _context.Order
                 .Include(o => o.PaymentType)
-                .Include(o => o.User)
+                .Include(o => o.User == user)
                 .FirstOrDefaultAsync(m => m.OrderId == id);
             if (order == null)
             {
@@ -82,8 +85,8 @@ namespace Bangazon.Controllers
 
 
 
-           public async Task<IActionResult> Purchase([FromRoute] int id)
-            {
+        public async Task<IActionResult> Purchase([FromRoute] int id)
+        {
 
             Product productToAdd = await _context.Product.SingleOrDefaultAsync(p => p.ProductId == id);
 
@@ -108,11 +111,12 @@ namespace Bangazon.Controllers
                 _context.Add(newOrder);
                 _context.SaveChanges();
                 returnedOrder = newOrder;
-                
-            } else
+
+            }
+            else
 
             {
-            var order = await _context.Order.SingleOrDefaultAsync(o => o.UserId == user.Id);
+                var order = await _context.Order.SingleOrDefaultAsync(o => o.UserId == user.Id);
                 var newOrderProduct = new OrderProduct
                 {
                     OrderId = order.OrderId,
@@ -120,13 +124,13 @@ namespace Bangazon.Controllers
                 };
                 _context.Add(newOrderProduct);
                 _context.SaveChanges();
-                returnedOrder = order;                
+                returnedOrder = order;
             }
 
-            var ad = new OrderDetailViewModel
 
-            return View("OrderDetails", returnedOrder); 
-        }      
+
+            return View("OrderDetails", returnedOrder);
+        }
 
 
         // GET: Orders/Edit/5
@@ -192,9 +196,11 @@ namespace Bangazon.Controllers
                 return NotFound();
             }
 
+            var user = await GetCurrentUserAsync();
+
             var order = await _context.Order
                 .Include(o => o.PaymentType)
-                .Include(o => o.User)
+                .Include(o => o.User == user)
                 .FirstOrDefaultAsync(m => m.OrderId == id);
             if (order == null)
             {
