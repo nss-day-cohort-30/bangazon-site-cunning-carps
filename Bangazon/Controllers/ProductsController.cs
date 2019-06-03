@@ -104,7 +104,6 @@ namespace Bangazon.Controllers
             }
             ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Label", product.ProductTypeId);
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", product.UserId);
-            ViewBag.Message = "Product price cannot exceed $10,000.";
             return View(product);
         }
 
