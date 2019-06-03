@@ -9,28 +9,32 @@
 
     <table class="table">
         <thead>
-            
+
         </thead>
         <tbody>
-           
+
             @foreach (var item in Model)
             {
                 <tr>
                     <td>
                         <br />
-                        <a asp-controller="ProductTypes" asp-action="Details" asp-route-id="@item.ProductTypeId"> @Html.DisplayFor(modelItem => item.Label)  (@Html.DisplayFor(modelItem => item.Count))</a>      
+                        <a asp-controller="ProductTypes" asp-action="Details" asp-route-id="@item.ProductTypeId"> @Html.DisplayFor(modelItem => item.Label)  (@Html.DisplayFor(modelItem => item.Count))</a>
                     </td>
 
                 </tr>
-        <td>
+            <td>
                 @foreach (Product item2 in item.Products.Take(3))
                 {
-            <dd>
-               
-                @Html.DisplayFor(modelItem => item2.Title)</dd>
-  
+                    @*<dd>
+
+                    @Html.DisplayFor(modelItem => item2.Title)</dd>*@
+
+                <dd>
+                    <a asp-action="Details" asp-route-id="@item2.ProductId">@Html.DisplayFor(modelItem => item2.Title)</a>
+                </dd>
+
             }
-        </td>
+                </td>
             }
             </tbody>
         </table>
