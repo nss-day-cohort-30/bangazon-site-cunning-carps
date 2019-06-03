@@ -147,7 +147,7 @@ namespace Bangazon.Controllers
             var user = await GetCurrentUserAsync();
 
             var paymentType = await _context.PaymentType
-                .Include(p => p.User == user)
+                .Where(p => p.User == user)
                 .FirstOrDefaultAsync(m => m.PaymentTypeId == id);
             if (paymentType == null)
             {
