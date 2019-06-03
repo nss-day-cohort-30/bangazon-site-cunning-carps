@@ -138,7 +138,6 @@ namespace Bangazon.Controllers
             return View(product);
         }
 
-
         public async Task<IActionResult> Purchase([FromRoute] int id)
         {
 
@@ -183,7 +182,6 @@ namespace Bangazon.Controllers
 
             return View(returnedOrder);
         }
-
 
         // GET: Products/Delete/5
         public async Task<IActionResult> Delete(int? id)
