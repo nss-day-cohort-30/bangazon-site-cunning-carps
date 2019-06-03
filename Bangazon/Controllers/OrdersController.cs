@@ -130,7 +130,6 @@ namespace Bangazon.Controllers
             return View("OrderDetails", returnedOrder);
         }
 
-
         // GET: Orders/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {

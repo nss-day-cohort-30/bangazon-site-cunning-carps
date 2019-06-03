@@ -25,18 +25,18 @@ namespace Bangazon.Controllers
             _userManager = userManager;
         }
         // GET: Products
-        public async Task<IActionResult> Index()
-        {
-            //var applicationDbContext = _context.Product.Include(p => p.ProductType).Include(p => p.User);
-            //return View(await applicationDbContext.ToListAsync());
-            var applicationDbContext = _context.Product.Include(p => p.User).Include(p => p.ProductType).OrderByDescending(p => p.DateCreated).Take(20);
-            return View(await applicationDbContext.ToListAsync());
-        }
-
+    
         public async Task<IActionResult> Index(string searchterm)
         {
-            var applicationDbContext = _context.Product.Where(p => p.Title.Contains(searchterm)).Include(p => p.User).Include(p => p.ProductType).OrderByDescending(p => p.DateCreated).Take(20);
-            return View(await applicationDbContext.ToListAsync());
+            if (searchterm != null)
+            {
+                var applicationDbContext = _context.Product.Where(p => p.Title.Contains(searchterm)).Include(p => p.User).Include(p => p.ProductType).OrderByDescending(p => p.DateCreated).Take(20);
+                return View(await applicationDbContext.ToListAsync());
+            } else
+            {
+                var applicationDbContext = _context.Product.Include(p => p.User).Include(p => p.ProductType).OrderByDescending(p => p.DateCreated).Take(20);
+                return View(await applicationDbContext.ToListAsync());
+            }
         }
 
         // GET: Products/Details/5
