@@ -9,10 +9,10 @@ namespace Bangazon.Models
     {
         public ApplicationUser()
         {
-             
+
         }
 
-        [Required]
+    [Required]
         [Display(Name ="First Name")]
         public string FirstName { get; set; }
 
