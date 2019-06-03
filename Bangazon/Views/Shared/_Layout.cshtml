@@ -38,9 +38,6 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Create">Sell Something</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Detail">View Cart</a>
-                        </li>
                         <li>
                             @using (Html.BeginForm("Index", "Products"))
                             {
@@ -49,7 +46,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="MyProducts">My Products</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Index">View Cart</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="ShoppingCart">View Cart</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index">My Settings</a>
