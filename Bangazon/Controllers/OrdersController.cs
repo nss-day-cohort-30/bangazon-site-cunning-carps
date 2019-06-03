@@ -127,8 +127,6 @@ namespace Bangazon.Controllers
                 returnedOrder = order;
             }
 
-
-
             return View("OrderDetails", returnedOrder);
         }
 
@@ -220,7 +218,6 @@ namespace Bangazon.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
         private bool OrderExists(int id)
         {
             return _context.Order.Any(e => e.OrderId == id);

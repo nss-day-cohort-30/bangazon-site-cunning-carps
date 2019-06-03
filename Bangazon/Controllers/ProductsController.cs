@@ -9,6 +9,7 @@ using Bangazon.Data;
 using Bangazon.Models;
 using Microsoft.AspNetCore.Identity;
 
+
 namespace Bangazon.Controllers
 {
     public class ProductsController : Controller
@@ -29,6 +30,12 @@ namespace Bangazon.Controllers
             //var applicationDbContext = _context.Product.Include(p => p.ProductType).Include(p => p.User);
             //return View(await applicationDbContext.ToListAsync());
             var applicationDbContext = _context.Product.Include(p => p.User).Include(p => p.ProductType).OrderByDescending(p => p.DateCreated).Take(20);
+            return View(await applicationDbContext.ToListAsync());
+        }
+
+        public async Task<IActionResult> Index(string searchterm)
+        {           
+            var applicationDbContext = _context.Product.Where(p => p.Title.Contains(searchterm)).Include(p => p.User).Include(p => p.ProductType).OrderByDescending(p => p.DateCreated).Take(20);
             return View(await applicationDbContext.ToListAsync());
         }
 
