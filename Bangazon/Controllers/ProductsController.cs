@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Bangazon.Data;
 using Bangazon.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace Bangazon.Controllers
@@ -60,6 +61,7 @@ namespace Bangazon.Controllers
         }
 
         // GET: Products
+        [Authorize]
         public async Task<IActionResult> MyProducts()
         {
 
@@ -72,7 +74,9 @@ namespace Bangazon.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
+
         // GET: Products/Create
+        [Authorize]
         public IActionResult Create()
         {
             ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Label");
