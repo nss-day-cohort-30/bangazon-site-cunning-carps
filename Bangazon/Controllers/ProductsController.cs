@@ -40,7 +40,6 @@ namespace Bangazon.Controllers
                 return View(await applicationDbContext.ToListAsync());
             }
         }
-
         // GET: Products/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -60,7 +59,6 @@ namespace Bangazon.Controllers
 
             return View(product);
         }
-
         // GET: Products
         [Authorize]
         public async Task<IActionResult> MyProducts()
@@ -106,8 +104,6 @@ namespace Bangazon.Controllers
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", product.UserId);
             return View(product);
         }
-
-        
 
         // GET: Products/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -187,7 +183,6 @@ namespace Bangazon.Controllers
             };
 
             return View(shoppingCart);
-
 }
 public async Task<IActionResult> Purchase([FromRoute] int id)
         {
@@ -242,10 +237,8 @@ public async Task<IActionResult> Purchase([FromRoute] int id)
                     Cost = productList.Select(p => p.p.ProductId).Count() * productList.Key.Price
                 };
 
-            var paymentTypes = _context.PaymentType.Where(p => p.User == user); 
-
-           
-                
+            shoppingCart.PaymentTypes = _context.PaymentType.Where(p => p.User == user).ToList(); 
+                                       
             return View(shoppingCart);
         }
 

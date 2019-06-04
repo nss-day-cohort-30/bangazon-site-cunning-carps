@@ -48,11 +48,7 @@
                                 <input type="text" id="searchterm" name="searchterm" placeholder="Search"/>
                             }
                             <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="MyProducts">My Products</a>
-                        @* View cart routes user to a list of all Orders, orders contain orderProducts as line-items *@
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Index">Cart</a>
-                        </li>
-                        @* Settings routes user through Entity Framework to account management *@
+                              @* Settings routes user through Entity Framework to account management *@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="ShoppingCart">View Cart</a>
                             <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index">Settings</a>
