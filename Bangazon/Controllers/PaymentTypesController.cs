@@ -9,11 +9,31 @@ using Bangazon.Data;
 using Bangazon.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using System.Text.RegularExpressions;
 
 namespace Bangazon.Controllers
 {
     public class PaymentTypesController : Controller
     {
+        //public static bool IsCreditCardInfoValid(string expiryDate)
+        //{
+        //    var monthCheck = new Regex(@"^(0[1-9]|1[0-2])$");
+        //    var yearCheck = new Regex(@"^20[0-9]{2}$");
+
+
+        //    var dateParts = expiryDate.Split('/'); //expiry date in from MM/yyyy            
+        //    if (!monthCheck.IsMatch(dateParts[0]) || !yearCheck.IsMatch(dateParts[1])) // <3 - 6>
+        //        return false; // ^ check date format is valid as "MM/yyyy"
+
+        //    var year = int.Parse(dateParts[1]);
+        //    var month = int.Parse(dateParts[0]);
+        //    var lastDateOfExpiryMonth = DateTime.DaysInMonth(year, month); //get actual expiry date
+        //    var cardExpiry = new DateTime(year, month, lastDateOfExpiryMonth, 23, 59, 59);
+
+        //    //check expiry greater than today & within next 6 years <7, 8>>
+        //    return (cardExpiry > DateTime.Now && cardExpiry < DateTime.Now.AddYears(6));
+        //}
+
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _context;
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
@@ -69,7 +89,7 @@ namespace Bangazon.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PaymentTypeId,DateCreated,Description,AccountNumber")] PaymentType paymentType)
+        public async Task<IActionResult> Create([Bind("PaymentTypeId,DateCreated,Description,AccountNumber,ExpiryDate")] PaymentType paymentType)
         {
             ModelState.Remove("UserId");
             var user = await GetCurrentUserAsync();
