@@ -13,7 +13,7 @@
 
         @foreach (var item in Model)
         {
-            @if (item.Orders.Count > 2)
+            @if (item.Orders.Count <= 1)
             {
                 <h3> There are no users with multiple open orders</h3>
             }
