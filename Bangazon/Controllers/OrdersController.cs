@@ -9,6 +9,8 @@ using Bangazon.Data;
 using Bangazon.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Bangazon.Models.OrderViewModels;
+using System.Data.SqlClient;
 
 namespace Bangazon.Controllers
 {
@@ -82,14 +84,32 @@ namespace Bangazon.Controllers
             ViewData["PaymentTypeId"] = new SelectList(_context.PaymentType, "PaymentTypeId", "AccountNumber", order.PaymentTypeId);
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", order.UserId);
             return View(order);
-<<<<<<< HEAD
         }
 
+        //returns to view with the hyperlinks
+        public async Task<IActionResult> Reports()
+        {
+            return View();
+        }
+
+        //gets users that have multiple open orders and then displays first name, last name, and order count
+        //otherwise displays the multiple orders not found view
         public async Task<IActionResult> GetOpenOrders()
         {
-      
-            var applicationDbContext = _context.Order.Include(o => o.PaymentType).Include(o => o.User);
-            return View(await applicationDbContext.ToListAsync());
+
+            List<ApplicationUser> usersWithMultipleOrders = new List<ApplicationUser>();
+
+            var usersWithOpenOrders = _context.ApplicationUsers
+                .Include(u => u.Orders)
+                .Where(u => u.Orders.Any(o => o.DateCompleted == null))
+                .ToList()
+                
+                ;
+            
+            var usersWithMultipleOpenOrders = usersWithOpenOrders
+                                              .Where(u => u.Orders.Count() >= 2).ToList();
+
+            return View(usersWithOpenOrders);
         }
 
 
@@ -138,9 +158,6 @@ namespace Bangazon.Controllers
 
             return View("OrderDetails", returnedOrder);
         }
-=======
-        }                       
->>>>>>> master
 
         // GET: Orders/Edit/5
         public async Task<IActionResult> Edit(int? id)

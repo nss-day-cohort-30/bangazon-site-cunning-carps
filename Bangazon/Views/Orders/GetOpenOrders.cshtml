@@ -1,55 +1,48 @@
-﻿@model Bangazon.Models.OrderViewModels.MultipleOrdersViewModel;
-
+﻿@model List<Bangazon.Models.ApplicationUser>
 @{
     ViewData["Title"] = "GetOpenOrders";
 }
 
-<h2>Details</h2>
+<h1>Multiple Orders:</h1>
 
-<div>
-    <h4>ProductType</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.User.FirstName)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.User.FirstName)
-        </dd>
-    </dl>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.ProductType.Products.FirstOrDefault().Title)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ProductType.Products.FirstOrDefault().Quantity)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ProductType.Products.FirstOrDefault().Price)
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.ProductType.Products)
+<table class="table">
+    <thead>
+        <tr></tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model)
+        {
+            @if (item.Orders.Count > 2)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(model => item.Title)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(model => item.Quantity)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(model => item.Price)
-                    </td>
-                </tr>
+                <h3> There are no users with multiple open orders</h3>
             }
+            else
+            {
+            <th>
+                @Html.DisplayNameFor(model => model[0].FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].Orders)
+            </th>
+
+            <tr>
+                <td>
+                    @item.FirstName
+                </td>
+                <td>
+                    @item.LastName
+                </td>
+                <td>
+                    @item.Orders.Where(o => o.DateCompleted == null).ToList().Count()
+                </td>
+            </tr>
+
+        }
+
+        }
         </tbody>
     </table>
-</div>
-<div>
-
-    <a asp-controller="ProductTypes" asp-action="Index">Back to List</a>
-</div>
