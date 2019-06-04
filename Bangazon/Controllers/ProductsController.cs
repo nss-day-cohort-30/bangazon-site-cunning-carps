@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Bangazon.Models.OrderViewModels;
 
+
 namespace Bangazon.Controllers
 {
     public class ProductsController : Controller
@@ -182,9 +183,15 @@ namespace Bangazon.Controllers
                 Cost = productList.Select(p => p.p.ProductId).Count() * productList.Key.Price
             };
 
+            shoppingCart.PaymentTypes = _context.PaymentType.Where(p => p.User == user).Select(p => new SelectListItem
+            {
+                Text = p.Description,
+                Value = p.PaymentTypeId.ToString()
+            }).ToList();
+
             return View(shoppingCart);
 }
-public async Task<IActionResult> Purchase([FromRoute] int id)
+public async Task<IActionResult> AddToOrder([FromRoute] int id)
         {
             Product productToAdd = await _context.Product.SingleOrDefaultAsync(p => p.ProductId == id);
 
@@ -229,7 +236,7 @@ public async Task<IActionResult> Purchase([FromRoute] int id)
                 join p in _context.Product
                 on op.ProductId equals p.ProductId
                 where op.OrderId == shoppingCart.Order.OrderId
-                group new { p, op } by p into productList
+                group new { p, op } by p into productList           
                 select new OrderLineItem()
                 {
                     Product = productList.Key,
@@ -237,9 +244,30 @@ public async Task<IActionResult> Purchase([FromRoute] int id)
                     Cost = productList.Select(p => p.p.ProductId).Count() * productList.Key.Price
                 };
 
-            shoppingCart.PaymentTypes = _context.PaymentType.Where(p => p.User == user).ToList(); 
-                                       
+            shoppingCart.PaymentTypes = _context.PaymentType.Where(p => p.User == user).Select(p => new SelectListItem
+            {
+                Text = p.Description,
+                Value = p.PaymentTypeId.ToString()
+            }).ToList();
+                                                
             return View(shoppingCart);
+        }
+
+        public async Task<IActionResult> Purchase([FromRoute] int Id)
+        {
+            var user = await GetCurrentUserAsync();
+
+            var orders = _context.Order.Where(p => p.User == user).ToList();
+
+            orders.ForEach(o =>
+            {
+                o.PaymentTypeId = Id;
+                o.DateCompleted = DateTime.Now;
+                _context.Add(o);
+            });
+            _context.SaveChanges();           
+                                     
+            return View("Index");
         }
 
         // GET: Products/Delete/5

@@ -21,6 +21,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.LineItems.FirstOrDefault().Cost)
             </th>
+
             <th></th>
         </tr>
     </thead>
@@ -40,8 +41,16 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Cost)
                 </td>
-
             </tr>
         }
     </tbody>
 </table>
+<f
+
+       <form asp-action="Purchase" asp-controller="Products">
+           <div class="form-group">
+               <select asp-for="Order.PaymentTypeId" asp-items="@Model.PaymentTypes"></select>
+               <a asp-route-returnUrl="@Url.Action("Purchase", "Products", new { Id = 2 })">Purchase</a>
+           </div>
+            </form>
+
