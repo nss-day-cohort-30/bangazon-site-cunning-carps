@@ -6,24 +6,32 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Bangazon.Models
 {
-  public class PaymentType
-  {
-    [Key]
-    public int PaymentTypeId { get; set; }
+    public class PaymentType
+    {
+        [Key]
+        public int PaymentTypeId { get; set; }
 
-    [Required]
-    [DataType(DataType.Date)]
-    [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-    public DateTime DateCreated { get; set; }
+        [Required]
+        [DataType(DataType.Date)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        [Display(Name = "Date Created")]
+        public DateTime DateCreated { get; set; }
 
-    [Required]
-    [StringLength(55)]
-    [Display(Name = "Card Type")]
-    public string Description { get; set; }
+        [Required]
+        [StringLength(55)]
+        [Display(Name = "Card Type")]
+        public string Description { get; set; }
 
-    [Required]
-    [StringLength(20)]
-    public string AccountNumber { get; set; }
+        [Required]
+        [StringLength(20)]
+        [Display(Name = "Account Number")]
+        public string AccountNumber { get; set; }
+
+        //[Required]
+        [StringLength(7)]
+        [ExpiryValidation]
+        [Display(Name = "Expiration Date MM/yyyy")]
+        public string ExpiryDate { get; set; }
 
         //[Required]
         public string UserId { get; set; }
