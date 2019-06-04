@@ -82,6 +82,7 @@ namespace Bangazon.Controllers
             ViewData["PaymentTypeId"] = new SelectList(_context.PaymentType, "PaymentTypeId", "AccountNumber", order.PaymentTypeId);
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", order.UserId);
             return View(order);
+<<<<<<< HEAD
         }
 
         public async Task<IActionResult> GetOpenOrders()
@@ -137,6 +138,9 @@ namespace Bangazon.Controllers
 
             return View("OrderDetails", returnedOrder);
         }
+=======
+        }                       
+>>>>>>> master
 
         // GET: Orders/Edit/5
         public async Task<IActionResult> Edit(int? id)

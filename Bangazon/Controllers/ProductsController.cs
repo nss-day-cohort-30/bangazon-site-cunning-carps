@@ -9,7 +9,7 @@ using Bangazon.Data;
 using Bangazon.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
-
+using Bangazon.Models.OrderViewModels;
 
 namespace Bangazon.Controllers
 {
@@ -26,20 +26,20 @@ namespace Bangazon.Controllers
             _userManager = userManager;
         }
         // GET: Products
-    
+
         public async Task<IActionResult> Index(string searchterm)
         {
             if (searchterm != null)
             {
                 var applicationDbContext = _context.Product.Where(p => p.Title.Contains(searchterm)).Include(p => p.User).Include(p => p.ProductType).OrderByDescending(p => p.DateCreated).Take(20);
                 return View(await applicationDbContext.ToListAsync());
-            } else
+            }
+            else
             {
                 var applicationDbContext = _context.Product.Include(p => p.User).Include(p => p.ProductType).OrderByDescending(p => p.DateCreated).Take(20);
                 return View(await applicationDbContext.ToListAsync());
             }
         }
-
         // GET: Products/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -59,7 +59,6 @@ namespace Bangazon.Controllers
 
             return View(product);
         }
-
         // GET: Products
         [Authorize]
         public async Task<IActionResult> MyProducts()
@@ -73,7 +72,6 @@ namespace Bangazon.Controllers
                                        .OrderByDescending(p => p.DateCreated);
             return View(await applicationDbContext.ToListAsync());
         }
-
 
         // GET: Products/Create
         [Authorize]
@@ -106,8 +104,6 @@ namespace Bangazon.Controllers
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", product.UserId);
             return View(product);
         }
-
-        
 
         // GET: Products/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -164,9 +160,32 @@ namespace Bangazon.Controllers
             return View(product);
         }
 
-        public async Task<IActionResult> Purchase([FromRoute] int id)
+        public async Task<IActionResult> ShoppingCart()
         {
+            var user = await GetCurrentUserAsync();
+        var order = await _context.Order.SingleOrDefaultAsync
+            (o => o.User == user && o.DateCompleted == null);
+        OrderDetailViewModel shoppingCart = new OrderDetailViewModel();
+        shoppingCart.Order = order;
+            shoppingCart.LineItems =
+            from op in _context.OrderProduct
+            join p in _context.Product
+            on op.ProductId equals p.ProductId
+            where op.OrderId == shoppingCart.Order.OrderId
+            group new { p, op
+    }
+    by p into productList
+            select new OrderLineItem()
+    {
+        Product = productList.Key,
+                Units = productList.Select(p => p.p.ProductId).Count(),
+                Cost = productList.Select(p => p.p.ProductId).Count() * productList.Key.Price
+            };
 
+            return View(shoppingCart);
+}
+public async Task<IActionResult> Purchase([FromRoute] int id)
+        {
             Product productToAdd = await _context.Product.SingleOrDefaultAsync(p => p.ProductId == id);
 
             // Get the current user
@@ -174,9 +193,9 @@ namespace Bangazon.Controllers
 
             // See if the user has an open order
             var openOrder = await _context.Order.SingleOrDefaultAsync(o => o.User == user && o.DateCompleted == null);
+            Order order = null;
 
             // If no order, create one, else add to existing order
-            Order returnedOrder = null;
             if (openOrder == null)
             {
                 var newOrder = new Order
@@ -186,16 +205,14 @@ namespace Bangazon.Controllers
                     UserId = user.Id,
                     PaymentTypeId = null,
                 };
-
+                order = newOrder;
                 _context.Add(newOrder);
                 _context.SaveChanges();
-                returnedOrder = newOrder;
-
             }
             else
 
             {
-                var order = await _context.Order.SingleOrDefaultAsync(o => o.UserId == user.Id);
+                order = await _context.Order.SingleOrDefaultAsync(o => o.UserId == user.Id);
                 var newOrderProduct = new OrderProduct
                 {
                     OrderId = order.OrderId,
@@ -203,10 +220,26 @@ namespace Bangazon.Controllers
                 };
                 _context.Add(newOrderProduct);
                 _context.SaveChanges();
-                returnedOrder = order;
             }
 
-            return View(returnedOrder);
+            OrderDetailViewModel shoppingCart = new OrderDetailViewModel();
+            shoppingCart.Order = order;
+            shoppingCart.LineItems =
+                from op in _context.OrderProduct
+                join p in _context.Product
+                on op.ProductId equals p.ProductId
+                where op.OrderId == shoppingCart.Order.OrderId
+                group new { p, op } by p into productList
+                select new OrderLineItem()
+                {
+                    Product = productList.Key,
+                    Units = productList.Select(p => p.p.ProductId).Count(),
+                    Cost = productList.Select(p => p.p.ProductId).Count() * productList.Key.Price
+                };
+
+            shoppingCart.PaymentTypes = _context.PaymentType.Where(p => p.User == user).ToList(); 
+                                       
+            return View(shoppingCart);
         }
 
         // GET: Products/Delete/5
