@@ -1,0 +1,48 @@
+﻿@model List<Bangazon.Models.ApplicationUser>
+@{
+    ViewData["Title"] = "GetOpenOrders";
+}
+
+<h1>Multiple Orders:</h1>
+
+<table class="table">
+    <thead>
+        <tr></tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model)
+        {
+            @if (item.Orders.Count <= 1)
+            {
+                <h3> There are no users with multiple open orders</h3>
+            }
+            else
+            {
+            <th>
+                @Html.DisplayNameFor(model => model[0].FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].Orders)
+            </th>
+
+            <tr>
+                <td>
+                    @item.FirstName
+                </td>
+                <td>
+                    @item.LastName
+                </td>
+                <td>
+                    @item.Orders.Where(o => o.DateCompleted == null).ToList().Count()
+                </td>
+            </tr>
+
+        }
+
+        }
+        </tbody>
+    </table>
