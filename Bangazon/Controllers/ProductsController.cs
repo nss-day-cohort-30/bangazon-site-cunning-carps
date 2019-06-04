@@ -199,7 +199,7 @@ public async Task<IActionResult> AddToOrder([FromRoute] int id)
             var user = await GetCurrentUserAsync();
 
             // See if the user has an open order
-            var openOrder = await _context.Order.SingleOrDefaultAsync(o => o.User == user && o.DateCompleted == null);
+            var openOrder = await _context.Order.FirstOrDefaultAsync(o => o.User == user && o.DateCompleted == null);
             Order order = null;
 
             // If no order, create one, else add to existing order
@@ -213,13 +213,20 @@ public async Task<IActionResult> AddToOrder([FromRoute] int id)
                     PaymentTypeId = null,
                 };
                 order = newOrder;
+
+                var newOrderProduct = new OrderProduct
+                {
+                    OrderId = order.OrderId,
+                    ProductId = id
+                };
                 _context.Add(newOrder);
+                _context.Add(newOrderProduct);
                 _context.SaveChanges();
             }
             else
 
             {
-                order = await _context.Order.SingleOrDefaultAsync(o => o.UserId == user.Id);
+                order = await _context.Order.SingleOrDefaultAsync(o => o.UserId == user.Id && o.PaymentType == null);
                 var newOrderProduct = new OrderProduct
                 {
                     OrderId = order.OrderId,
@@ -253,19 +260,17 @@ public async Task<IActionResult> AddToOrder([FromRoute] int id)
             return View(shoppingCart);
         }
 
-        public async Task<IActionResult> Purchase([FromRoute] int Id)
+        public async Task<IActionResult> Purchase([FromForm] OrderDetailViewModel Model)
         {
             var user = await GetCurrentUserAsync();
 
-            var orders = _context.Order.Where(p => p.User == user).ToList();
+            var order = await _context.Order.SingleOrDefaultAsync(o => o.OrderId == Model.Order.OrderId);
 
-            orders.ForEach(o =>
-            {
-                o.PaymentTypeId = Id;
-                o.DateCompleted = DateTime.Now;
-                _context.Add(o);
-            });
-            _context.SaveChanges();           
+            order.PaymentTypeId = Model.Order.PaymentTypeId;
+            order.DateCompleted = DateTime.Now;
+
+            _context.Update(order);
+             _context.SaveChanges();           
                                      
             return View("Index");
         }

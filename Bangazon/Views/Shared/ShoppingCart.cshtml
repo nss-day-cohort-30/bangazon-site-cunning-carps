@@ -45,12 +45,12 @@
         }
     </tbody>
 </table>
-<f
 
        <form asp-action="Purchase" asp-controller="Products">
-           <div class="form-group">
+           <div) class="form-group">
+               <input type="hidden" name="Order.OrderId" value="@Model.Order.OrderId"/>
                <select asp-for="Order.PaymentTypeId" asp-items="@Model.PaymentTypes"></select>
-               <a asp-route-returnUrl="@Url.Action("Purchase", "Products", new { Id = 2 })">Purchase</a>
-           </div>
+              <input type="submit" value="Purchase" />
+           </div)>
             </form>
 
