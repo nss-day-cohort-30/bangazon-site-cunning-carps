@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Bangazon.Models.OrderViewModels
 {
-    public class OpenOrdersForCustomers
+    public class MultipleOrdersViewModel
     {
 
         [Key]
