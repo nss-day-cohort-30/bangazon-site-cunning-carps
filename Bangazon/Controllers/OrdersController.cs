@@ -84,6 +84,12 @@ namespace Bangazon.Controllers
             return View(order);
         }
 
+        public async Task<IActionResult> GetOpenOrders()
+        {
+      
+            var applicationDbContext = _context.Order.Include(o => o.PaymentType).Include(o => o.User);
+            return View(await applicationDbContext.ToListAsync());
+        }
 
 
 
