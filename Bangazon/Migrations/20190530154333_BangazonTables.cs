@@ -179,7 +179,7 @@ namespace Bangazon.Migrations
                     Description = table.Column<string>(maxLength: 55, nullable: false),
                     AccountNumber = table.Column<string>(maxLength: 20, nullable: false),
                     UserId = table.Column<string>(nullable: false),
-                    ExpiryDate = table.Column<string>(nullable: false)
+                    ExpiryDate = table.Column<string>(maxLength:7, nullable: false)
                 },
                 constraints: table =>
                 {

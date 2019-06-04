@@ -184,6 +184,9 @@ namespace Bangazon.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(55);
+                    b.Property<string>("ExpiryDate")
+                        .IsRequired()
+                        .HasMaxLength(7);
 
                     b.Property<string>("UserId")
                         .IsRequired();
@@ -201,7 +204,8 @@ namespace Bangazon.Migrations
                             AccountNumber = "86753095551212",
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "American Express",
-                            UserId = "6cb861f0-13ee-42f7-a1b3-fab6dcbb7f77"
+                            UserId = "6cb861f0-13ee-42f7-a1b3-fab6dcbb7f77",
+                            ExpiryDate = "12/2021"
                         },
                         new
                         {
@@ -209,7 +213,8 @@ namespace Bangazon.Migrations
                             AccountNumber = "4102948572991",
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Discover",
-                            UserId = "6cb861f0-13ee-42f7-a1b3-fab6dcbb7f77"
+                            UserId = "6cb861f0-13ee-42f7-a1b3-fab6dcbb7f77",
+                            ExpiryDate = "05/2022"
                         });
                 });
 
