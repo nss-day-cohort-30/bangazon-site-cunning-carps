@@ -178,7 +178,8 @@ namespace Bangazon.Migrations
                     DateCreated = table.Column<DateTime>(nullable: false, defaultValueSql: "GETDATE()"),
                     Description = table.Column<string>(maxLength: 55, nullable: false),
                     AccountNumber = table.Column<string>(maxLength: 20, nullable: false),
-                    UserId = table.Column<string>(nullable: false)
+                    UserId = table.Column<string>(nullable: false),
+                    ExpiryDate = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -300,13 +301,13 @@ namespace Bangazon.Migrations
 
             migrationBuilder.InsertData(
                 table: "PaymentType",
-                columns: new[] { "PaymentTypeId", "AccountNumber", "Description", "UserId" },
-                values: new object[] { 1, "86753095551212", "American Express", "3abf5f13-de66-480c-adad-8d1e1eecf318" });
+                columns: new[] { "PaymentTypeId", "AccountNumber", "Description", "UserId", "ExpiryDate" },
+                values: new object[] { 1, "86753095551212", "American Express", "3abf5f13-de66-480c-adad-8d1e1eecf318", "12/2021"  });
 
             migrationBuilder.InsertData(
                 table: "PaymentType",
-                columns: new[] { "PaymentTypeId", "AccountNumber", "Description", "UserId" },
-                values: new object[] { 2, "4102948572991", "Discover", "3abf5f13-de66-480c-adad-8d1e1eecf318" });
+                columns: new[] { "PaymentTypeId", "AccountNumber", "Description", "UserId", "ExpiryDate" },
+                values: new object[] { 2, "4102948572991", "Discover", "3abf5f13-de66-480c-adad-8d1e1eecf318", "05/2022" });
 
             migrationBuilder.InsertData(
                 table: "Product",
