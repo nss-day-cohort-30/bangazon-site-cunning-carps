@@ -30,7 +30,7 @@ namespace Bangazon.Models
         //[Required]
         [StringLength(7)]
         [ExpiryValidation]
-        [Display(Name = "Expiration Date")]
+        [Display(Name = "Expiration Date MM/yyyy")]
         public string ExpiryDate { get; set; }
 
         //[Required]
