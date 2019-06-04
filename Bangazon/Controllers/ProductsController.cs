@@ -242,6 +242,10 @@ public async Task<IActionResult> Purchase([FromRoute] int id)
                     Cost = productList.Select(p => p.p.ProductId).Count() * productList.Key.Price
                 };
 
+            var paymentTypes = _context.PaymentType.Where(p => p.User == user); 
+
+           
+                
             return View(shoppingCart);
         }
 
