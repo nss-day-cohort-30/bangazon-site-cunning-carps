@@ -97,17 +97,12 @@ namespace Bangazon.Controllers
         public async Task<IActionResult> GetOpenOrders()
         {
 
-            List<ApplicationUser> usersWithMultipleOrders = new List<ApplicationUser>();
 
             var usersWithOpenOrders = _context.ApplicationUsers
                 .Include(u => u.Orders)
                 .Where(u => u.Orders.Any(o => o.DateCompleted == null))
-                .ToList()
-                
-                ;
-            
-            var usersWithMultipleOpenOrders = usersWithOpenOrders
-                                              .Where(u => u.Orders.Count() >= 2).ToList();
+                .ToList();             ;
+           
 
             return View(usersWithOpenOrders);
         }
