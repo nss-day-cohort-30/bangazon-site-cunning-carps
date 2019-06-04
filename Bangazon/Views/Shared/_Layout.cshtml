@@ -42,15 +42,8 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="ProductTypes" asp-action="Index">Product Types</a>
                         </li>
-                        <li>
-                            @using (Html.BeginForm("Index", "Products"))
-                            {
-                                <input type="text" id="searchterm" name="searchterm" placeholder="Search"/>
-                            }
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="MyProducts">My Products</a>
-                              @* Settings routes user through Entity Framework to account management *@
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="ShoppingCart">View Cart</a>
+                        @* Settings routes user through Entity Framework to account management *@
+<li class="nav-item">      <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="ShoppingCart">Cart</a>
                             <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index">Settings</a>
                         </li>
                         @* Reports shows user a view with links to unordered or erroneous product listings *@
