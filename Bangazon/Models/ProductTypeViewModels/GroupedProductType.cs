@@ -8,6 +8,8 @@ namespace Bangazon.Models.ProductTypeViewModels
     public class GroupedProductType
     {
         public int ProductTypeId { get; set; }
+        public int ProductId { get; set; }
+        public string Title { get; set; }
         public ProductType ProductType { get; set; }
         public string Label { get; set; }
         public double Quantity { get; set; }
