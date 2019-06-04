@@ -13,7 +13,7 @@
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
               crossorigin="anonymous"
-              integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE="/>
+              integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE=" />
     </environment>
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
@@ -45,9 +45,9 @@
                         @* View cart routes user to a list of all Orders, orders contain orderProducts as line-items *@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="ShoppingCart">Cart</a>
-                        </li>
+                        </li>                      
                         @* Settings routes user through Entity Framework to account management *@
-                        <li class="nav-item">
+                        <li>
                             <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index">Settings</a>
                         </li>
                         @* Reports shows user a view with links to unordered or erroneous product listings *@
@@ -65,7 +65,7 @@
                 </div>
             </div>
         </nav>
-        
+
     </header>
     <div class="container">
         <partial name="_CookieConsentPartial" />

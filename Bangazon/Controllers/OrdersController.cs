@@ -82,55 +82,7 @@ namespace Bangazon.Controllers
             ViewData["PaymentTypeId"] = new SelectList(_context.PaymentType, "PaymentTypeId", "AccountNumber", order.PaymentTypeId);
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", order.UserId);
             return View(order);
-        }
-
-
-
-
-        public async Task<IActionResult> Purchase([FromRoute] int id)
-        {
-
-            Product productToAdd = await _context.Product.SingleOrDefaultAsync(p => p.ProductId == id);
-
-            // Get the current user
-            var user = await GetCurrentUserAsync();
-
-            // See if the user has an open order
-            var openOrder = await _context.Order.SingleOrDefaultAsync(o => o.User == user && o.DateCompleted == null);
-
-            // If no order, create one, else add to existing order
-            Order returnedOrder = null;
-            if (openOrder == null)
-            {
-                var newOrder = new Order
-                {
-                    DateCreated = DateTime.Now,
-                    DateCompleted = null,
-                    UserId = user.Id,
-                    PaymentTypeId = null,
-                };
-
-                _context.Add(newOrder);
-                _context.SaveChanges();
-                returnedOrder = newOrder;
-
-            }
-            else
-
-            {
-                var order = await _context.Order.SingleOrDefaultAsync(o => o.UserId == user.Id);
-                var newOrderProduct = new OrderProduct
-                {
-                    OrderId = order.OrderId,
-                    ProductId = id
-                };
-                _context.Add(newOrderProduct);
-                _context.SaveChanges();
-                returnedOrder = order;
-            }
-
-            return View("OrderDetails", returnedOrder);
-        }
+        }                       
 
         // GET: Orders/Edit/5
         public async Task<IActionResult> Edit(int? id)
