@@ -10,6 +10,8 @@ using Bangazon.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Bangazon.Models.OrderViewModels;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace Bangazon.Controllers
 {
@@ -273,7 +275,7 @@ public async Task<IActionResult> Purchase([FromRoute] int id)
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProductExists(int id)
+            private bool ProductExists(int id)
         {
             return _context.Product.Any(e => e.ProductId == id);
         }
