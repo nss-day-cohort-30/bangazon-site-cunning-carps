@@ -9,7 +9,6 @@ namespace Bangazon.Migrations
             migrationBuilder.AddColumn<string>(
                 name: "ExpiryDate",
                 table: "PaymentType",
-                type:"string",
                 maxLength: 7,
                 nullable: true);
         }
