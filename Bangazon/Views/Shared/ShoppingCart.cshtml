@@ -10,55 +10,63 @@ else
     ViewData["Title"] = "ShoppingCart";
 
 
-<h2>ShoppingCart</h2>
+    <h2>ShoppingCart</h2>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.LineItems.FirstOrDefault().Product.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LineItems.FirstOrDefault().Product.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LineItems.FirstOrDefault().Units)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LineItems.FirstOrDefault().Cost)
-            </th>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.LineItems.FirstOrDefault().Product.Title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LineItems.FirstOrDefault().Product.Description)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LineItems.FirstOrDefault().Units)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LineItems.FirstOrDefault().Cost)
+                </th>
 
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.LineItems)
-        {
-         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Product.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Product.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Units)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Cost)
-            </td>
-        </tr>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.LineItems)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Product.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Product.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Units)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Cost)
+                    </td>
+                </tr>
 
-        }
-    </tbody>
-</table>
+            }
+        </tbody>
+    </table>
 
-       <form asp-action="Purchase" asp-controller="Products">
-           <div) class="form-group">
-               <input type="hidden" name="Order.OrderId" value="@Model.Order.OrderId"/>
-               <select asp-for="Order.PaymentTypeId" asp-items="@Model.PaymentTypes"></select>
-              <input type="submit" value="Purchase" />
-           </div)>
-            </form>
-    }
+    <form asp-action="Purchase" asp-controller="Products">
+        @* Purchase button *@
+        <div class="form-group">
+            <input type="hidden" name="Order.OrderId" value="@Model.Order.OrderId" />
+            <select asp-for="Order.PaymentTypeId" asp-items="@Model.PaymentTypes"></select>
+            <input type="submit" value="Purchase" />
+        
+        @* Cancel Order button *@
+            <input type="hidden" asp-for="Order" />
+            <input type="submit" value="Delete" />
+        @* Go back to Product Index *@
+            <a asp-action="Index">Back to List</a>
+        </div>
+    </form>
+
+}
 
