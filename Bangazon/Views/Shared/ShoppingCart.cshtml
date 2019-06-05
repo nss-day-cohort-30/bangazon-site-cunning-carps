@@ -1,8 +1,14 @@
 ﻿@model Bangazon.Models.OrderViewModels.OrderDetailViewModel
 
-@{
-    ViewData["Title"] = "ShoppingCart";
+@if (Model.Error != null)
+{
+    @Html.DisplayFor(model => model.Error)
 }
+else
+
+{
+    ViewData["Title"] = "ShoppingCart";
+
 
 <h2>ShoppingCart</h2>
 
@@ -53,4 +59,5 @@
               <input type="submit" value="Purchase" />
            </div)>
             </form>
+    }
 

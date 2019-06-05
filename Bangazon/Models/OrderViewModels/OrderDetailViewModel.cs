@@ -10,6 +10,8 @@ namespace Bangazon.Models.OrderViewModels
         public IEnumerable<OrderLineItem> LineItems { get; set; }
 
         public List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem> PaymentTypes { get; set; }
+
+        public string Error { get; set; }
         
     }
 }
