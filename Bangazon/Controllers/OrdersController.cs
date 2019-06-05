@@ -98,9 +98,9 @@ namespace Bangazon.Controllers
         {
 
 
-            var usersWithOpenOrders = _context.ApplicationUsers
+            var usersWithOpenOrders =  _context.ApplicationUsers
                 .Include(u => u.Orders)
-                .Where(u => u.Orders.Any(o => o.DateCompleted == null && u.Orders.Count >= 2))
+                .Where(u => u.Orders.Any(o => o.DateCompleted == null))
                 .ToList();             ;
            
 
