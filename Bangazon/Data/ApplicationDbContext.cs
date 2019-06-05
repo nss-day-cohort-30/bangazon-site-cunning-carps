@@ -46,7 +46,7 @@ namespace Bangazon.Data {
             modelBuilder.Entity<PaymentType> ()
                 .Property (b => b.DateCreated)
                 .HasDefaultValueSql ("GETDATE()");
-
+                
             ApplicationUser user = new ApplicationUser {
                 FirstName = "Admina",
                 LastName = "Straytor",
@@ -57,7 +57,8 @@ namespace Bangazon.Data {
                 NormalizedEmail = "ADMIN@ADMIN.COM",
                 EmailConfirmed = true,
                 LockoutEnabled = false,
-                SecurityStamp = Guid.NewGuid ().ToString ("D")
+                SecurityStamp = "67abd6d3-7436-4448-8aec-08d8a5641178", 
+                Id = "3abf5f13-de66-480c-adad-8d1e1eecf318"
             };
             var passwordHash = new PasswordHasher<ApplicationUser> ();
             user.PasswordHash = passwordHash.HashPassword (user, "P8ssword!");
@@ -145,7 +146,14 @@ namespace Bangazon.Data {
                     OrderId = 1,
                     UserId = user.Id,
                     PaymentTypeId = null
+                },
+                new Order ()
+                {
+                    OrderId = 2,
+                    UserId = user.Id,
+                    PaymentTypeId = null
                 }
+
             );
 
             modelBuilder.Entity<OrderProduct> ().HasData (

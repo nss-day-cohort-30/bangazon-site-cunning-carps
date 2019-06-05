@@ -9,6 +9,11 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
+<p>
+
+    <a asp-controller="Orders" asp-action="GetOpenOrders" asp-route-id="model.OrderId"> Multiple Orders (Open Orders Report)</a>
+</p>
 <table class="table">
     <thead>
         <tr>
@@ -28,26 +33,27 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateCreated)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateCompleted)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PaymentType.AccountNumber)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.OrderId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.OrderId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.OrderId">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateCreated)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateCompleted)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PaymentType.AccountNumber)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.OrderId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.OrderId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.OrderId">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
