@@ -1,14 +1,8 @@
 ﻿@model Bangazon.Models.OrderViewModels.OrderDetailViewModel
 
-@if (Model.Error != null)
-{
-    @Html.DisplayFor(model => model.Error)
-}
-else
-
-{
+@{
     ViewData["Title"] = "ShoppingCart";
-
+}
 
 <h2>ShoppingCart</h2>
 
@@ -27,6 +21,10 @@ else
             <th>
                 @Html.DisplayNameFor(model => model.LineItems.FirstOrDefault().Cost)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PaymentTypes)
+            </th>
+
 
             <th></th>
         </tr>
@@ -34,7 +32,7 @@ else
     <tbody>
         @foreach (var item in Model.LineItems)
         {
-         <tr>
+        <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Product.Title)
             </td>
@@ -47,18 +45,10 @@ else
             <td>
                 @Html.DisplayFor(modelItem => item.Cost)
             </td>
+
         </tr>
 
         }
     </tbody>
+
 </table>
-
-       <form asp-action="Purchase" asp-controller="Products">
-           <div) class="form-group">
-               <input type="hidden" name="Order.OrderId" value="@Model.Order.OrderId"/>
-               <select asp-for="Order.PaymentTypeId" asp-items="@Model.PaymentTypes"></select>
-              <input type="submit" value="Purchase" />
-           </div)>
-            </form>
-    }
-

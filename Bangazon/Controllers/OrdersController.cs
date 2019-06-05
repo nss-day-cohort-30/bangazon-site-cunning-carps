@@ -108,7 +108,6 @@ namespace Bangazon.Controllers
         }
 
 
-
         public async Task<IActionResult> Purchase([FromRoute] int id)
         {
 
