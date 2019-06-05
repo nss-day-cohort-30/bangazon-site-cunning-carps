@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Http;
 using System.IO;
 using Bangazon.Models.ProductViewModels;
 
-
 namespace Bangazon.Controllers
 {
     public class ProductsController : Controller
@@ -250,7 +249,6 @@ public async Task<IActionResult> AddToOrder([FromRoute] int id)
 
                 _context.Add(newOrder);
                 _context.SaveChanges();
-
             }
 
                  order = await _context.Order.FirstOrDefaultAsync(o => o.User == user && o.DateCompleted == null);
@@ -299,9 +297,41 @@ public async Task<IActionResult> AddToOrder([FromRoute] int id)
             order.DateCompleted = DateTime.Now;
 
             _context.Update(order);
-             _context.SaveChanges();
+            _context.SaveChanges();
 
-            return RedirectToAction(nameof(Index)); 
+            List<OrderProduct> orderproducts = await _context.OrderProduct.Where(op => op.OrderId == order.OrderId).ToListAsync();
+            List<Product> products = await _context.Product.ToListAsync();
+
+            orderproducts.ForEach (op =>
+            {
+                var product = products.Find(p => p.ProductId == op.ProductId);
+
+                var newProductQuantity = product.Quantity - 1;
+                product.Quantity = newProductQuantity;
+                               
+                _context.Update(product);
+                _context.Entry(product).State = EntityState.Modified;
+            });
+
+            var shoppingCart = new OrderDetailViewModel();
+            bool negativeQuantity = false;
+
+            products.ForEach(p =>
+            {
+                if (p.Quantity <0)
+                {
+                    shoppingCart.Error = "Sorry, at least one of the products in your cart is out of stock";
+                    negativeQuantity = true;
+                }
+            });
+            if (negativeQuantity == false)
+            {
+                _context.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            } else
+            {
+                return View("ShoppingCart", shoppingCart);
+            }         
         }
 
         // GET: Products/Delete/5
