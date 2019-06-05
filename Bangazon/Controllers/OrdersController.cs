@@ -101,10 +101,20 @@ namespace Bangazon.Controllers
             var usersWithOpenOrders =  _context.ApplicationUsers
                 .Include(u => u.Orders)
                 .Where(u => u.Orders.Any(o => o.DateCompleted == null))
-                .ToList();             ;
-           
+                .ToList();
 
-            return View(usersWithOpenOrders);
+            var usersWithMultipleOrders = usersWithOpenOrders
+                 .Where(u => u.Orders.Count >= 2);
+
+            var usersWithOpenOrders2 = usersWithMultipleOrders.Count();
+
+            if (usersWithOpenOrders2 == 0)
+            {
+                
+            } 
+          
+           
+            return View(usersWithMultipleOrders);
         }
 
 

@@ -11,52 +11,40 @@
     </thead>
     <tbody>
 
-        @{
-            int i = 0;
-        }
+      @if (Model.Count < 1)
+      {
+          <h3>There are no users with multiple orders</h3>
+      } else {
+
         @foreach (var item in Model)
         {
 
-            i++;
+
+            <th>
+                @Html.DisplayNameFor(model => model[0].FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].Orders)
+            </th>
+
+            <tr>
+                <td>
+                    @item.FirstName
+                </td>
+                <td>
+                    @item.LastName
+                </td>
+                <td>
+                    @item.Orders.Where(o => o.DateCompleted == null).ToList().Count()
+                </td>
+            </tr>
+
+            }
 
         }
-
-
-        @if (i <= 1)
-        {
-
-            <h3>There are no users with multiple orders</h3>
-
-        }
-        else
-        {
-            @foreach (var item in Model)
-
-            {
-
-<th>
-            @Html.DisplayNameFor(model => model[0].FirstName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model[0].LastName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model[0].Orders)
-        </th>
-
-        <tr>
-            <td>
-                @item.FirstName
-            </td>
-            <td>
-                @item.LastName
-            </td>
-            <td>
-                @item.Orders.Where(o => o.DateCompleted == null).ToList().Count()
-            </td>
-        </tr>
-            }
-            }
 
         </tbody>
     </table>
