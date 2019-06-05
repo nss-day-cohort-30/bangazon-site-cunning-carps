@@ -34,9 +34,15 @@ namespace Bangazon.Controllers
         {
             if (searchterm != null)
             {
-                var applicationDbContext = _context.Product.Where(p => p.Title.Contains(searchterm)).Include(p => p.User).Include(p => p.ProductType).OrderByDescending(p => p.DateCreated).Take(20);
+                // user can search by product.title or product.city
+                var applicationDbContext = _context.Product.Where(p => p.Title.Contains(searchterm) || p.City.Contains(searchterm))
+                    .Include(p => p.User)
+                    .Include(p => p.ProductType)
+                    .OrderByDescending(p => p.DateCreated)
+                    .Take(20);
                 return View(await applicationDbContext.ToListAsync());
             }
+
             else
             {
                 var applicationDbContext = _context.Product.Include(p => p.User).Include(p => p.ProductType).OrderByDescending(p => p.DateCreated).Take(20);

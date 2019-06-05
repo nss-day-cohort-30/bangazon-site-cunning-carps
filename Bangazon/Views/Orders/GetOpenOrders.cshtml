@@ -1,33 +1,36 @@
-﻿@model List<Bangazon.Models.ApplicationUser>
-@{
-    ViewData["Title"] = "GetOpenOrders";
+﻿@model Bangazon.Models.OrderViewModels.MultipleOrdersViewModel
+
+
+@if (Model.Error != null)
+{
+    @Html.DisplayFor(model => model.Error)
 }
+else
 
-<h1>Multiple Orders:</h1>
+{
+    ViewData["Title"] = "GetOpenOrders";
 
-<table class="table">
-    <thead>
-        <tr></tr>
-    </thead>
-    <tbody>
 
-        @foreach (var item in Model)
-        {
-            @if (item.Orders.Count <= 1)
+    <h1>Multiple Orders:</h1>
+
+    <table class="table">
+        <thead>
+            <tr></tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.ApplicationUsers)
             {
-                <h3> There are no users with multiple open orders</h3>
-            }
-            else
-            {
+
             <th>
-                @Html.DisplayNameFor(model => model[0].FirstName)
+                @Html.DisplayNameFor(modelItem => item.FirstName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model[0].LastName)
+                @Html.DisplayNameFor(modelItem => item.LastName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model[0].Orders)
+               Number of Orders
             </th>
+
 
             <tr>
                 <td>
@@ -37,12 +40,10 @@
                     @item.LastName
                 </td>
                 <td>
-                    @item.Orders.Where(o => o.DateCompleted == null).ToList().Count()
+                    @Html.DisplayFor(model => item.Orders.Count)
                 </td>
             </tr>
-
-        }
-
-        }
-        </tbody>
-    </table>
+            }         
+            </tbody>
+        </table>
+}
