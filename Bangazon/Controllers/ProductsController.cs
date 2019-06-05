@@ -282,9 +282,9 @@ public async Task<IActionResult> AddToOrder([FromRoute] int id)
             order.DateCompleted = DateTime.Now;
 
             _context.Update(order);
-             _context.SaveChanges();           
-                                     
-            return View("Index");
+             _context.SaveChanges();
+
+            return RedirectToAction(nameof(Index)); 
         }
 
         // GET: Products/Delete/5
