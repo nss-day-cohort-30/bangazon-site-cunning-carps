@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Bangazon.Models.OrderViewModels;
 
-
 namespace Bangazon.Controllers
 {
     public class ProductsController : Controller
@@ -224,7 +223,6 @@ public async Task<IActionResult> AddToOrder([FromRoute] int id)
 
                 _context.Add(newOrder);
                 _context.SaveChanges();
-
             }
 
                  order = await _context.Order.FirstOrDefaultAsync(o => o.User == user && o.DateCompleted == null);
