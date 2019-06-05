@@ -116,8 +116,8 @@ namespace Bangazon.Controllers
                 return View(openorders);
             } else
             {
-           
-                 return View(usersWithMultipleOrders);
+                openorders.ApplicationUsers = usersWithMultipleOrders;
+                 return View(openorders);
             }
         }
 

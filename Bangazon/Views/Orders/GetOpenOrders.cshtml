@@ -22,13 +22,13 @@ else
             {
 
             <th>
-                @Html.DisplayFor(modelItem => item.FirstName)
+                @Html.DisplayNameFor(modelItem => item.FirstName)
             </th>
             <th>
                 @Html.DisplayNameFor(modelItem => item.LastName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => item.ApplicationUser.Orders)
+               Number of Orders
             </th>
 
 
@@ -40,7 +40,7 @@ else
                     @item.LastName
                 </td>
                 <td>
-                    @item.ApplicationUser.Orders.Where(o => o.DateCompleted == null).ToList().Count()
+                    @Html.DisplayFor(model => item.Orders.Count)
                 </td>
             </tr>
             }

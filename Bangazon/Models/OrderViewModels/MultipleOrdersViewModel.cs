@@ -9,7 +9,7 @@ namespace Bangazon.Models.OrderViewModels
     {
         public Order Order { get; set; }
 
-        public IEnumerable<ApplicationUserLineItem> ApplicationUsers { get; set; }
+        public IEnumerable<ApplicationUser> ApplicationUsers { get; set; }
 
         public string Error { get; set; }
 
