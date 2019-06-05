@@ -33,6 +33,7 @@ namespace Bangazon.Controllers
         {
             if (searchterm != null)
             {
+                // user can search by product.title or product.city
                 var applicationDbContext = _context.Product.Where(p => p.Title.Contains(searchterm) || p.City.Contains(searchterm))
                     .Include(p => p.User)
                     .Include(p => p.ProductType)
