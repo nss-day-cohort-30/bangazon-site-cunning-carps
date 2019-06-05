@@ -11,13 +11,14 @@
     </thead>
     <tbody>
 
+
+
         @foreach (var item in Model)
         {
-            @if (item.Orders.Count <= 1)
-            {
-                <h3> There are no users with multiple open orders</h3>
-            }
-            else
+
+
+
+            @if (item.Orders.Count >= 2)
             {
             <th>
                 @Html.DisplayNameFor(model => model[0].FirstName)
@@ -40,6 +41,11 @@
                     @item.Orders.Where(o => o.DateCompleted == null).ToList().Count()
                 </td>
             </tr>
+
+        }
+        else
+        {
+            <h3> There are no users with multiple open orders</h3>
 
         }
 
