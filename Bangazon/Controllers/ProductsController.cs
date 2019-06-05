@@ -269,7 +269,7 @@ public async Task<IActionResult> AddToOrder([FromRoute] int id)
                 Value = p.PaymentTypeId.ToString()
             }).ToList();
                                                 
-            return View(shoppingCart);
+            return View("ShoppingCart", shoppingCart);
         }
 
         public async Task<IActionResult> Purchase([FromForm] OrderDetailViewModel Model)
