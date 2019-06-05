@@ -271,7 +271,20 @@ public async Task<IActionResult> AddToOrder([FromRoute] int id)
             order.DateCompleted = DateTime.Now;
 
             _context.Update(order);
-             _context.SaveChanges();
+            _context.SaveChanges();
+
+            List<OrderProduct> orderproducts = await _context.OrderProduct.Where(op => op.OrderId == order.OrderId).ToListAsync();
+
+
+            orderproducts.ForEach (async op =>
+            {
+                Product product = await _context.Product.SingleOrDefaultAsync(p => p.ProductId == op.ProductId);
+
+                product.Quantity--;
+                _context.Update(product);
+                _context.SaveChanges();
+            });
+          
 
             return RedirectToAction(nameof(Index)); 
         }
