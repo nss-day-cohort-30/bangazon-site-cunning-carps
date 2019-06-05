@@ -98,13 +98,27 @@ namespace Bangazon.Controllers
         {
 
 
-            var usersWithOpenOrders = _context.ApplicationUsers
+            var usersWithOpenOrders =  _context.ApplicationUsers
                 .Include(u => u.Orders)
                 .Where(u => u.Orders.Any(o => o.DateCompleted == null))
-                .ToList();             ;
-           
+                .ToList();
 
-            return View(usersWithOpenOrders);
+            var usersWithMultipleOrders = usersWithOpenOrders
+                 .Where(u => u.Orders.Count >= 2);
+
+            var usersWithOpenOrders2 = usersWithMultipleOrders.Count();
+
+            MultipleOrdersViewModel openorders = new MultipleOrdersViewModel();
+
+            if (usersWithOpenOrders2 == 0)
+            {
+                openorders.Error = "There are no users with multiple orders";
+                return View(openorders);
+            } else
+            {
+                openorders.ApplicationUsers = usersWithMultipleOrders;
+                 return View(openorders);
+            }
         }
 
 
