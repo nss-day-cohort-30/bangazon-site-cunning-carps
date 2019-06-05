@@ -108,13 +108,17 @@ namespace Bangazon.Controllers
 
             var usersWithOpenOrders2 = usersWithMultipleOrders.Count();
 
+            MultipleOrdersViewModel openorders = new MultipleOrdersViewModel();
+
             if (usersWithOpenOrders2 == 0)
             {
-                
-            } 
-          
+                openorders.Error = "There are no users with multiple orders";
+                return View(openorders);
+            } else
+            {
            
-            return View(usersWithMultipleOrders);
+                 return View(usersWithMultipleOrders);
+            }
         }
 
 
