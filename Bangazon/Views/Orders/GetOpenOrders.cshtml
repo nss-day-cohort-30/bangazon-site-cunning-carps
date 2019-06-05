@@ -11,20 +11,19 @@
     </thead>
     <tbody>
 
-    
-
-        @foreach (var item in Model)
+        @if (Model.Count == 0)
         {
-            
+            <h3> There are no users with multiple open orders</h3>
+        }
+        else
+        {
 
-            
-            @if (item == null)
+
+            @foreach (var item in Model)
             {
 
-                <h3> There are no users with multiple open orders</h3>
-            }
-            else
-            {
+
+
             <th>
                 @Html.DisplayNameFor(model => model[0].FirstName)
             </th>
@@ -47,7 +46,15 @@
                 </td>
             </tr>
 
+
+
+
+
+
         }
+
+
+
 
         }
         </tbody>
