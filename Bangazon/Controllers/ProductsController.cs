@@ -10,6 +10,8 @@ using Bangazon.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Bangazon.Models.OrderViewModels;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace Bangazon.Controllers
 {
@@ -31,9 +33,14 @@ namespace Bangazon.Controllers
         {
             if (searchterm != null)
             {
-                var applicationDbContext = _context.Product.Where(p => p.Title.Contains(searchterm)).Include(p => p.User).Include(p => p.ProductType).OrderByDescending(p => p.DateCreated).Take(20);
+                var applicationDbContext = _context.Product.Where(p => p.Title.Contains(searchterm) || p.City.Contains(searchterm))
+                    .Include(p => p.User)
+                    .Include(p => p.ProductType)
+                    .OrderByDescending(p => p.DateCreated)
+                    .Take(20);
                 return View(await applicationDbContext.ToListAsync());
             }
+
             else
             {
                 var applicationDbContext = _context.Product.Include(p => p.User).Include(p => p.ProductType).OrderByDescending(p => p.DateCreated).Take(20);
@@ -273,7 +280,7 @@ public async Task<IActionResult> Purchase([FromRoute] int id)
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProductExists(int id)
+            private bool ProductExists(int id)
         {
             return _context.Product.Any(e => e.ProductId == id);
         }
