@@ -210,7 +210,7 @@ public async Task<IActionResult> AddToOrder([FromRoute] int id)
             var openOrder = await _context.Order.FirstOrDefaultAsync(o => o.User == user && o.DateCompleted == null);
 
             Order order = null;
-          
+
             // If no order, create one, else add to existing order
             if (openOrder == null)
             {
@@ -221,9 +221,11 @@ public async Task<IActionResult> AddToOrder([FromRoute] int id)
                     UserId = user.Id,
                     PaymentTypeId = null,
                 };
-                
+
                 _context.Add(newOrder);
                 _context.SaveChanges();
+
+            }
 
                  order = await _context.Order.FirstOrDefaultAsync(o => o.User == user && o.DateCompleted == null);
 
@@ -234,19 +236,8 @@ public async Task<IActionResult> AddToOrder([FromRoute] int id)
                 };
 
                 _context.Add(newOrderProduct);
-                _context.SaveChanges();
-            }
-            else
-            {
-                order = await _context.Order.SingleOrDefaultAsync(o => o.UserId == user.Id && o.PaymentType == null);
-                var newOrderProduct = new OrderProduct
-                {
-                    OrderId = order.OrderId,
-                    ProductId = id
-                };
-                _context.Add(newOrderProduct);
-                _context.SaveChanges();
-            }
+                _context.SaveChanges();            
+
 
             OrderDetailViewModel shoppingCart = new OrderDetailViewModel();
             shoppingCart.Order = order;
