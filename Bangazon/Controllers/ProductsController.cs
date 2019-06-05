@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.Authorization;
 using Bangazon.Models.OrderViewModels;
 using Microsoft.AspNetCore.Http;
 using System.IO;
+using Bangazon.Models.ProductViewModels;
+
 
 namespace Bangazon.Controllers
 {
@@ -85,9 +87,11 @@ namespace Bangazon.Controllers
         [Authorize]
         public IActionResult Create()
         {
+            UploadImageViewModel viewproduct = new UploadImageViewModel();
+            viewproduct.product = new Product();
             ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Label");
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id");
-            return View();
+            return View(viewproduct);
         }
 
         // POST: Products/Create
@@ -95,22 +99,37 @@ namespace Bangazon.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,DateCreated,Description,Title,Price,Quantity,UserId,City,ImagePath,ProductTypeId")] Product product)
+        public async Task<IActionResult> Create(UploadImageViewModel viewproduct)
         {
-            ModelState.Remove("UserId");
+            ModelState.Remove("product.UserId");
             var user = await GetCurrentUserAsync();
+
+            viewproduct.product.User = user;
+            viewproduct.product.UserId = user.Id;
 
             if (ModelState.IsValid)
             {
-                product.User = user;
-                product.UserId = user.Id;
-                _context.Add(product);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (viewproduct.ImageFile != null)
+                {
+                    var fileName = Path.GetFileName(viewproduct.ImageFile.FileName);
+                    Path.GetTempFileName();
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images", fileName);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await viewproduct.ImageFile.CopyToAsync(stream);
+                    }
+
+                    viewproduct.product.ImagePath = viewproduct.ImageFile.FileName;
+                }
+                    
+                    _context.Add(viewproduct.product);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                
             }
-            ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Label", product.ProductTypeId);
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", product.UserId);
-            return View(product);
+            ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Label", viewproduct.product.ProductTypeId);
+            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", viewproduct.product.UserId);
+            return View(viewproduct.product);
         }
 
         // GET: Products/Edit/5
@@ -171,9 +190,17 @@ namespace Bangazon.Controllers
         public async Task<IActionResult> ShoppingCart()
         {
             var user = await GetCurrentUserAsync();
-        var order = await _context.Order.SingleOrDefaultAsync
+        var order = await _context.Order.FirstOrDefaultAsync
             (o => o.User == user && o.DateCompleted == null);
+            
         OrderDetailViewModel shoppingCart = new OrderDetailViewModel();
+
+            if (order == null)
+            {
+                shoppingCart.Error = "Your shopping cart is empty";
+                return View(shoppingCart);
+            }                       
+
         shoppingCart.Order = order;
             shoppingCart.LineItems =
             from op in _context.OrderProduct
@@ -190,9 +217,15 @@ namespace Bangazon.Controllers
                 Cost = productList.Select(p => p.p.ProductId).Count() * productList.Key.Price
             };
 
+            shoppingCart.PaymentTypes = _context.PaymentType.Where(p => p.User == user).Select(p => new SelectListItem
+            {
+                Text = p.Description,
+                Value = p.PaymentTypeId.ToString()
+            }).ToList();
+
             return View(shoppingCart);
 }
-public async Task<IActionResult> Purchase([FromRoute] int id)
+public async Task<IActionResult> AddToOrder([FromRoute] int id)
         {
             Product productToAdd = await _context.Product.SingleOrDefaultAsync(p => p.ProductId == id);
 
@@ -200,7 +233,8 @@ public async Task<IActionResult> Purchase([FromRoute] int id)
             var user = await GetCurrentUserAsync();
 
             // See if the user has an open order
-            var openOrder = await _context.Order.SingleOrDefaultAsync(o => o.User == user && o.DateCompleted == null);
+            var openOrder = await _context.Order.FirstOrDefaultAsync(o => o.User == user && o.DateCompleted == null);
+
             Order order = null;
 
             // If no order, create one, else add to existing order
@@ -213,22 +247,23 @@ public async Task<IActionResult> Purchase([FromRoute] int id)
                     UserId = user.Id,
                     PaymentTypeId = null,
                 };
-                order = newOrder;
+
                 _context.Add(newOrder);
                 _context.SaveChanges();
-            }
-            else
 
-            {
-                order = await _context.Order.SingleOrDefaultAsync(o => o.UserId == user.Id);
+            }
+
+                 order = await _context.Order.FirstOrDefaultAsync(o => o.User == user && o.DateCompleted == null);
+
                 var newOrderProduct = new OrderProduct
                 {
                     OrderId = order.OrderId,
                     ProductId = id
                 };
+
                 _context.Add(newOrderProduct);
-                _context.SaveChanges();
-            }
+                _context.SaveChanges();            
+
 
             OrderDetailViewModel shoppingCart = new OrderDetailViewModel();
             shoppingCart.Order = order;
@@ -237,7 +272,7 @@ public async Task<IActionResult> Purchase([FromRoute] int id)
                 join p in _context.Product
                 on op.ProductId equals p.ProductId
                 where op.OrderId == shoppingCart.Order.OrderId
-                group new { p, op } by p into productList
+                group new { p, op } by p into productList           
                 select new OrderLineItem()
                 {
                     Product = productList.Key,
@@ -245,9 +280,28 @@ public async Task<IActionResult> Purchase([FromRoute] int id)
                     Cost = productList.Select(p => p.p.ProductId).Count() * productList.Key.Price
                 };
 
-            shoppingCart.PaymentTypes = _context.PaymentType.Where(p => p.User == user).ToList(); 
-                                       
-            return View(shoppingCart);
+            shoppingCart.PaymentTypes = _context.PaymentType.Where(p => p.User == user).Select(p => new SelectListItem
+            {
+                Text = p.Description,
+                Value = p.PaymentTypeId.ToString()
+            }).ToList();
+                                                
+            return View("ShoppingCart", shoppingCart);
+        }
+
+        public async Task<IActionResult> Purchase([FromForm] OrderDetailViewModel Model)
+        {
+            var user = await GetCurrentUserAsync();
+
+            var order = await _context.Order.SingleOrDefaultAsync(o => o.OrderId == Model.Order.OrderId);
+
+            order.PaymentTypeId = Model.Order.PaymentTypeId;
+            order.DateCompleted = DateTime.Now;
+
+            _context.Update(order);
+             _context.SaveChanges();
+
+            return RedirectToAction(nameof(Index)); 
         }
 
         // GET: Products/Delete/5
