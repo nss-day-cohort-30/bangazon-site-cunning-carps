@@ -1,54 +1,54 @@
 ﻿@model Bangazon.Models.OrderViewModels.MultipleOrdersViewModel
 
 
-
 @if (Model.Error != null)
 {
-   
     @Html.DisplayFor(model => model.Error)
 }
-else {
+else
 
+{
     ViewData["Title"] = "GetOpenOrders";
 
 
-<h1>Multiple Orders:</h1>
+    <h1>Multiple Orders:</h1>
 
-<table class="table">
-    <thead>
-        <tr></tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.ApplicationUsers)
-        {
+    <table class="table">
+        <thead>
+            <tr></tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.ApplicationUsers)
+            {
 
-        <th>
-            @Html.DisplayFor(modelItem => item.FirstName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(modelItem => item.LastName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => item.ApplicationUser.Orders)
-        </th>
+            <th>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(modelItem => item.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => item.ApplicationUser.Orders)
+            </th>
 
 
-        <tr>
-            <td>
-                @item.FirstName
-            </td>
-            <td>
-                @item.LastName
-            </td>
-            <td>
-                @item.ApplicationUser.Orders.Where(o => o.DateCompleted == null).ToList().Count()
-            </td>
-        </tr>
-    }
+            <tr>
+                <td>
+                    @item.FirstName
+                </td>
+                <td>
+                    @item.LastName
+                </td>
+                <td>
+                    @item.ApplicationUser.Orders.Where(o => o.DateCompleted == null).ToList().Count()
+                </td>
+            </tr>
+            }
+}
+            }
 
-        }
-
-        }
-    }
-        </tbody>
-    </table>
+            }
+            }
+            </tbody>
+        </table>
+}
