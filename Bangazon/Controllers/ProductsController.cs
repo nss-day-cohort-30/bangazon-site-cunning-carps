@@ -294,19 +294,38 @@ public async Task<IActionResult> AddToOrder([FromRoute] int id)
             _context.SaveChanges();
 
             List<OrderProduct> orderproducts = await _context.OrderProduct.Where(op => op.OrderId == order.OrderId).ToListAsync();
+            List<Product> products = await _context.Product.ToListAsync();
 
-
-            orderproducts.ForEach (async op =>
+            orderproducts.ForEach (op =>
             {
-                Product product = await _context.Product.SingleOrDefaultAsync(p => p.ProductId == op.ProductId);
+                var product = products.Find(p => p.ProductId == op.ProductId);
 
-                product.Quantity--;
+                var newProductQuantity = product.Quantity - 1;
+                product.Quantity = newProductQuantity;
+                               
                 _context.Update(product);
-                _context.SaveChanges();
+                _context.Entry(product).State = EntityState.Modified;
             });
-          
 
-            return RedirectToAction(nameof(Index)); 
+            var shoppingCart = new OrderDetailViewModel();
+            bool negativeQuantity = false;
+
+            products.ForEach(p =>
+            {
+                if (p.Quantity <0)
+                {
+                    shoppingCart.Error = "Sorry, at least one of the products in your cart is out of stock";
+                    negativeQuantity = true;
+                }
+            });
+            if (negativeQuantity == false)
+            {
+                _context.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            } else
+            {
+                return View("ShoppingCart", shoppingCart);
+            }         
         }
 
         // GET: Products/Delete/5
